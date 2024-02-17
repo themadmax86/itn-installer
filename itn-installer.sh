@@ -1,4 +1,5 @@
 #!/bin/sh
+
 check_installed() {
     binary_name=$1
     package_name=$2
@@ -6,7 +7,7 @@ check_installed() {
     if [ $? -eq 1 ]; then
         echo "$binary_name missing"
         echo "Installing $package_name"  
-        sudo NEEDRESTART_MODE=a apt install $package_name -y
+        sudo apt install $package_name -y
     fi
 }
 
@@ -19,6 +20,7 @@ check_installed curl curl
 check_installed jq jq
 check_installed route net-tools
 check_installed logrotate logrotate
+check_installed libssl3 libssl3
 
 echo "Creating rusk service user"
 id -u dusk >/dev/null 2>&1 || useradd -r dusk
@@ -30,7 +32,7 @@ mkdir -p /opt/dusk/services
 mkdir -p /opt/dusk/installer
 
 VERIFIER_KEYS_URL="https://nodes.dusk.network/keys"
-INSTALLER_URL="https://github.com/dusk-network/itn-installer/tarball/main"
+INSTALLER_URL="https://github.com/dusk-network/itn-installer/archive/refs/tags/v0.1.0.tar.gz"
 RUSK_URL=$(curl -s "https://api.github.com/repos/dusk-network/rusk/releases/latest" | jq -r  '.assets[].browser_download_url' | grep linux)
 WALLET_URL=$(curl -s "https://api.github.com/repos/dusk-network/wallet-cli/releases/latest" | jq -r  '.assets[].browser_download_url' | grep libssl3)
 
@@ -45,11 +47,6 @@ mv -n /opt/dusk/installer/services/* /opt/dusk/services/
 
 chmod +x /opt/dusk/bin/*
 
-#echo "Downloading the latest Rusk binary..."
-#curl -so /opt/dusk/installer/rusk.tar.gz -L "$RUSK_URL"
-#mkdir -p /opt/dusk/installer/rusk
-#tar xf /opt/dusk/installer/rusk.tar.gz --directory /opt/dusk/installer/rusk
-#mv /opt/dusk/installer/rusk/rusk /opt/dusk/bin/
 chmod +x /opt/dusk/bin/rusk
 ln -sf /opt/dusk/bin/rusk /usr/bin/rusk
 
