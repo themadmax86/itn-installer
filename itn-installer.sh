@@ -6,7 +6,7 @@ check_installed() {
     which $binary_name >/dev/null 2>&1
     if [ $? -eq 1 ]; then
         echo "$binary_name missing"
-        echo "Installing $package_name"  
+        echo "Installing $package_name"
         sudo apt install $package_name -y
     fi
 }
@@ -95,7 +95,7 @@ echo "service rusk start"
 echo
 echo "To run the Rusk wallet:"
 echo "rusk-wallet -n local"
-echo 
+echo
 echo "To check the logs"
 echo "tail -F /var/log/rusk.{log,err}"
 
